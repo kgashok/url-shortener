@@ -1,4 +1,5 @@
 from pyshorteners import Shortener
+import json 
 
 class BitShortener(Shortener):
     """Bit.ly shortener Extended Implementation
@@ -14,9 +15,26 @@ class BitShortener(Shortener):
         >>> s.bitly.total_clicks('https://bit.ly/TEST')
         10
     """
-    pass
+    api_url = "https://api-ssl.bit.ly/v4"
 
     def user_info(self, **kwargs):
         """return or update info about a user"""
-        return "ashok"
+        # return "ashok"
+        """Total clicks implementation for Bit.ly
+        Args:
+        Returns:
+            user information
+        """
+        #clicks_url = f"{self.api_url}/bitlinks/{url}/clicks"
+        user_url = f"{self.api_url}/user"
+        headers = {"Authorization": f"Bearer {self.bitly.api_key}"}
+        response = self.bitly._get(user_url, headers=headers)
+        if not response.ok:
+            raise BadAPIResponseException(response.content)
 
+        try:
+            data = response.json()
+        except json.decoder.JSONDecodeError:
+            raise BadAPIResponseException("API response could not be decoded")
+
+        return data
