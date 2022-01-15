@@ -15,8 +15,6 @@ class BitShortener(Shortener):
         >>> s.bitly.total_clicks('https://bit.ly/TEST')
         10
     """
-    api_url = "https://api-ssl.bit.ly/v4"
-
     def user_info(self, **kwargs):
         # return "ashok"
         """return or update info about a user
@@ -25,7 +23,8 @@ class BitShortener(Shortener):
             user information
         """
         #clicks_url = f"{self.api_url}/bitlinks/{url}/clicks"
-        user_url = f"{self.api_url}/user"
+        user_url = f"{self.bitly.api_url}/user"
+        print(f'user_url: {user_url}')
         headers = {"Authorization": f"Bearer {self.bitly.api_key}"}
         response = self.bitly._get(user_url, headers=headers)
         if not response.ok:
@@ -50,10 +49,10 @@ class BitShortener(Shortener):
         headers = {"Authorization": f"Bearer {self.bitly.api_key}"}
 
         params = (
-            ('size', '20'),
+            ('size', '50'),
             ('page', '1'),
-            # ('keyword', 'python'),
-            # ('query', 'api'),
+            #('keyword', 'python'),
+            ('query', "python"),
             # ('created_before', '1501027200'),
             # ('created_after', '1501027200'),
             # ('modified_after', '1501027200'),
@@ -70,6 +69,7 @@ class BitShortener(Shortener):
         )
 
         # response = requests.get(bitlinks_url, headers=headers, params=params)
+        print(f'bitlink_url: {bitlinks_url}')
         response = self.bitly._get(bitlinks_url, headers=headers, params=params)
         if not response.ok:
             raise BadAPIResponseException(response.content)

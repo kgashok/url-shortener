@@ -29,10 +29,12 @@ print("groupid", groupid)
 
 # Step 2 - get links by group
 #import pprint
+querystr= "python"
+# linkinfo = client.get_links(query=querystr)
 linkinfo = client.get_links()
 print(len(linkinfo["links"]))
 
-for bitlink in linkinfo["links"][:5]: 
+for bitlink in linkinfo["links"][:50]: 
   try:
     print(f'{bitlink["title"][:30]}', end=" -> ")
   except: 
