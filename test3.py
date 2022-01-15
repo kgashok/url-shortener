@@ -33,4 +33,8 @@ linkinfo = client.get_links()
 print(len(linkinfo["links"]))
 
 for bitlink in linkinfo["links"][:5]: 
-  print(bitlink["long_url"], bitlink["link"]) #, bitlink["custom_bitlinks"])
+  try:
+    print(f'{bitlink["title"][:30]}', end=" -> ")
+  except: 
+    print("<No title>", end=" ->")
+  print(f'{bitlink["long_url"][:35]}, {bitlink["link"]}') #, bitlink["custom_bitlinks"])
