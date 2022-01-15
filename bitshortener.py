@@ -18,9 +18,8 @@ class BitShortener(Shortener):
     api_url = "https://api-ssl.bit.ly/v4"
 
     def user_info(self, **kwargs):
-        """return or update info about a user"""
         # return "ashok"
-        """Total clicks implementation for Bit.ly
+        """return or update info about a user
         Args:
         Returns:
             user information
@@ -29,6 +28,49 @@ class BitShortener(Shortener):
         user_url = f"{self.api_url}/user"
         headers = {"Authorization": f"Bearer {self.bitly.api_key}"}
         response = self.bitly._get(user_url, headers=headers)
+        if not response.ok:
+            raise BadAPIResponseException(response.content)
+
+        try:
+            data = response.json()
+        except json.decoder.JSONDecodeError:
+            raise BadAPIResponseException("API response could not be decoded")
+
+        return data
+
+    def get_links(self, **kwargs):
+        """get links for a default groupid and user
+        Args:
+           userinfo and groupid
+        Returns:
+            paginated bitlinks 
+        """
+        groupid = self.user_info()["default_group_guid"]
+        bitlinks_url = f"{self.bitly.api_url}/groups/{groupid}/bitlinks"
+        headers = {"Authorization": f"Bearer {self.bitly.api_key}"}
+
+        params = (
+            ('size', '20'),
+            ('page', '1'),
+            # ('keyword', 'python'),
+            # ('query', 'api'),
+            # ('created_before', '1501027200'),
+            # ('created_after', '1501027200'),
+            # ('modified_after', '1501027200'),
+            ('archived', 'both'),
+            ('deeplinks', 'both'),
+            ('domain_deeplinks', 'both'),
+            # ('campaign_guid', 'Ca1bcd2EFGh'),
+            # ('channel_guid', 'Ha1bc2DefGh'),
+            ('custom_bitlink', 'both'),
+            ('tags[0]', 'bitly'),
+            ('tags[1]', 'api'),
+            # ('launchpad_ids[0]', 'M1234567890'),
+            # ('encoding_login[0]', 'chauncey'),
+        )
+
+        # response = requests.get(bitlinks_url, headers=headers, params=params)
+        response = self.bitly._get(bitlinks_url, headers=headers, params=params)
         if not response.ok:
             raise BadAPIResponseException(response.content)
 

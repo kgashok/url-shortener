@@ -7,7 +7,8 @@ access_token = "1ef1315a2efebd7557de137f776602276d833cb9"
 # link = input("Enter the short link to get more info:")
 client = BitShortener(api_key=access_token)
 
-urlist = ["https://j.mp/pythonYes", "https://j.mp/listThis", "http://j.mp/junk"]
+urlist = []
+# urlist.extend(["https://j.mp/pythonYes", "https://j.mp/listThis", "http://j.mp/junk"])
 for link in urlist: 
   try:
     # get more info here--> https://bit.ly/shorteners-info
@@ -19,4 +20,17 @@ for link in urlist:
     print("Bad URL!", e)
 
 
-print(client.user_info())
+# how to get a bunch of URLs from bitly 
+
+# Step 1 - get groupid 
+userinfo = client.user_info()
+groupid = userinfo.get('default_group_guid')
+print("groupid", groupid)
+
+# Step 2 - get links by group
+#import pprint
+linkinfo = client.get_links()
+print(len(linkinfo["links"]))
+
+for bitlink in linkinfo["links"][:5]: 
+  print(bitlink["long_url"], bitlink["link"]) #, bitlink["custom_bitlinks"])
