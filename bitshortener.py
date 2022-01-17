@@ -2,7 +2,7 @@ from pyshorteners import Shortener
 import json 
 
 class BitShortener(Shortener):
-    """Bit.ly shortener Extended Implementation
+    """Bit.ly Shortener Extended Implementation
     Args:
         api_key (str): bit.ly API key
     Example:
@@ -17,10 +17,13 @@ class BitShortener(Shortener):
     """
     def user_info(self, **kwargs):
         # return "ashok"
-        """return or update info about a user
+        """return or update info about a user by
+        calling the appropriate bitlyAPI endpoint. 
+        Documented at https://dev.bitly.com/api-reference#getUser
+
         Args:
         Returns:
-            user information
+            user information, including default_group_id
         """
         #clicks_url = f"{self.api_url}/bitlinks/{url}/clicks"
         user_url = f"{self.bitly.api_url}/user"
@@ -39,6 +42,8 @@ class BitShortener(Shortener):
 
     def get_links(self, **kwargs):
         """get links for a default groupid and user
+        as Documented at https://dev.bitly.com/api-reference#getBitlinksByGroup
+
         Args:
            userinfo and groupid
         Returns:
