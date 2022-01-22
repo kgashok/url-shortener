@@ -1,5 +1,6 @@
 from pyshorteners import Shortener
 import json 
+import requests
 
 class BitShortener(Shortener):
     """Bit.ly Shortener Extended Implementation
@@ -15,6 +16,63 @@ class BitShortener(Shortener):
         >>> s.bitly.total_clicks('https://bit.ly/TEST')
         10
     """
+    
+    def _patch(self, url, data=None, json=None, params=None, headers=None):
+        """Wrap a PATCH request with a url check.
+        Args:
+            url (str): URL shortener address.
+        Keyword Args:
+            data (dict, str): Form-encoded data, `Requests POST Data`_.
+            headers (dict): HTTP headers to add, `Requests Custom Headers`_.
+            json (dict): Python object to JSON encode for data, `Requests
+                POST Data`_.
+            params (dict): URL parameters, `Requests Parameters`_.
+        .. _Requests Custom Headers: http://requests.kennethreitz.org/en/master/user/quickstart/#custom-headers
+        .. _Requests Parameters: http://requests.kennethreitz.org/en/master/user/quickstart/#passing-parameters-in-urls
+        .. _Requests POST Data: http://requests.kennethreitz.org/en/master/user/quickstart/#more-complicated-post-requests
+        Returns:
+            requests.Response: HTTP response.
+        """
+        url = self.bitly.clean_url(url)
+
+        response = requests.patch(
+            url,
+            data=data,
+            json=json,
+            #params=params,
+            headers=headers,
+            timeout=self.bitly.timeout,
+            verify=self.bitly.verify,
+            proxies=self.bitly.proxies,
+            # cert=self.bitly.cert,
+        )
+        return response
+
+    def update_link(self, **kwargs):
+        headers = {
+            "Authorization": f"Bearer {self.bitly.api_key}", 
+            "Content-Type" : "application/json" 
+        }
+
+        id = "/bit.ly/3GB8YMP"
+
+        response = self.bitly._get('https://api-ssl.bitly.com/v4/bitlinks'+id, headers=headers)
+
+        print(response, response.content)
+        data = response.content
+        print("type", type(data))
+        data = response.json()
+        print("type after", type(data))
+        del data["deeplinks"]
+        print(type(data['tags']), type(data['tags']))
+        print(data['tags'])
+        data['tags'].append('test')
+
+        response = self._patch('https://api-ssl.bitly.com/v4/bitlinks'+id, json=data, headers=headers)
+        print("--After update")
+        print(response, response.content)
+
+
     def user_info(self, **kwargs):
         # return "ashok"
         """return or update info about a user by
@@ -54,10 +112,10 @@ class BitShortener(Shortener):
         headers = {"Authorization": f"Bearer {self.bitly.api_key}"}
 
         params = (
-            ('size', '50'),
+            ('size', '100'),
             ('page', '1'),
-            #('keyword', 'python'),
-            ('query', "python"),
+            #('keyword', 'learningToTeach'),
+            #('query', "python"),
             # ('created_before', '1501027200'),
             # ('created_after', '1501027200'),
             # ('modified_after', '1501027200'),

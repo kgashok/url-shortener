@@ -34,9 +34,19 @@ querystr= "python"
 linkinfo = client.get_links()
 print(len(linkinfo["links"]))
 
+'''
 for bitlink in linkinfo["links"][:50]: 
   try:
     print(f'{bitlink["title"][:30]}', end=" -> ")
   except: 
     print("<No title>", end=" ->")
   print(f'{bitlink["long_url"][:35]}, {bitlink["link"]}') #, bitlink["custom_bitlinks"])
+'''
+
+# Update the tags for a particular link
+
+update_url = "/bit.ly/3GB8YMP"
+
+tags = ["test", "project_ideas", "python"]
+client.update_link() # update_url, tags)
+
