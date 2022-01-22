@@ -1,6 +1,7 @@
 from pyshorteners import Shortener
-import json 
+import json
 import requests
+
 
 class BitShortener(Shortener):
     """Bit.ly Shortener Extended Implementation
@@ -16,7 +17,7 @@ class BitShortener(Shortener):
         >>> s.bitly.total_clicks('https://bit.ly/TEST')
         10
     """
-    
+
     def _patch(self, url, data=None, json=None, params=None, headers=None):
         """Wrap a PATCH request with a url check.
         Args:
@@ -39,7 +40,7 @@ class BitShortener(Shortener):
             url,
             data=data,
             json=json,
-            #params=params,
+            # params=params,
             headers=headers,
             timeout=self.bitly.timeout,
             verify=self.bitly.verify,
@@ -50,13 +51,15 @@ class BitShortener(Shortener):
 
     def update_link(self, **kwargs):
         headers = {
-            "Authorization": f"Bearer {self.bitly.api_key}", 
-            "Content-Type" : "application/json" 
+            "Authorization": f"Bearer {self.bitly.api_key}",
+            "Content-Type": "application/json"
         }
 
         id = "/bit.ly/3GB8YMP"
 
-        response = self.bitly._get('https://api-ssl.bitly.com/v4/bitlinks'+id, headers=headers)
+        response = self.bitly._get(
+            'https://api-ssl.bitly.com/v4/bitlinks' + id,
+            headers=headers)
 
         print(response, response.content)
         data = response.content
@@ -72,15 +75,17 @@ class BitShortener(Shortener):
         # It doesn't - that's cool!
         data['tags'].append('test')
 
-        response = self._patch('https://api-ssl.bitly.com/v4/bitlinks'+id, json=data, headers=headers)
+        response = self._patch(
+            'https://api-ssl.bitly.com/v4/bitlinks' + id,
+            json=data,
+            headers=headers)
         print("--After update")
         print(response, response.content)
-
 
     def user_info(self, **kwargs):
         # return "ashok"
         """return or update info about a user by
-        calling the appropriate bitlyAPI endpoint. 
+        calling the appropriate bitlyAPI endpoint.
         Documented at https://dev.bitly.com/api-reference#getUser
 
         Args:
@@ -109,7 +114,7 @@ class BitShortener(Shortener):
         Args:
            userinfo and groupid
         Returns:
-            paginated bitlinks 
+            paginated bitlinks
         """
         groupid = self.user_info()["default_group_guid"]
         bitlinks_url = f"{self.bitly.api_url}/groups/{groupid}/bitlinks"
@@ -137,7 +142,8 @@ class BitShortener(Shortener):
 
         # response = requests.get(bitlinks_url, headers=headers, params=params)
         print(f'bitlink_url: {bitlinks_url}')
-        response = self.bitly._get(bitlinks_url, headers=headers, params=params)
+        response = self.bitly._get(
+            bitlinks_url, headers=headers, params=params)
         if not response.ok:
             raise BadAPIResponseException(response.content)
 
