@@ -66,6 +66,10 @@ class BitShortener(Shortener):
         del data["deeplinks"]
         print(type(data['tags']), type(data['tags']))
         print(data['tags'])
+
+        # updating the tags with another additional tag
+        # Does it accept duplicates?
+        # It doesn't - that's cool!
         data['tags'].append('test')
 
         response = self._patch('https://api-ssl.bitly.com/v4/bitlinks'+id, json=data, headers=headers)
