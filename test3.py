@@ -48,5 +48,8 @@ for bitlink in linkinfo["links"][:50]:
 update_url = "/bit.ly/3GB8YMP"
 
 tags = ["test", "project_ideas", "python"]
+
+# need to change the signature for this call
+# how to use kwargs again?
 client.update_link() # update_url, tags)
 
