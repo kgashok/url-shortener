@@ -82,31 +82,6 @@ class BitShortener(Shortener):
         print("--After update")
         print(response, response.content)
 
-    def user_info(self, **kwargs):
-        # return "ashok"
-        """return or update info about a user by
-        calling the appropriate bitlyAPI endpoint.
-        Documented at https://dev.bitly.com/api-reference#getUser
-
-        Args:
-        Returns:
-            user information, including default_group_id
-        """
-        #clicks_url = f"{self.api_url}/bitlinks/{url}/clicks"
-        user_url = f"{self.bitly.api_url}/user"
-        print(f'user_url: {user_url}')
-        headers = {"Authorization": f"Bearer {self.bitly.api_key}"}
-        response = self.bitly._get(user_url, headers=headers)
-        if not response.ok:
-            raise BadAPIResponseException(response.content)
-
-        try:
-            data = response.json()
-        except json.decoder.JSONDecodeError:
-            raise BadAPIResponseException("API response could not be decoded")
-
-        return data
-
     def get_links(self, **kwargs):
         """get links for a default groupid and user
         as Documented at https://dev.bitly.com/api-reference#getBitlinksByGroup
@@ -153,3 +128,29 @@ class BitShortener(Shortener):
             raise BadAPIResponseException("API response could not be decoded")
 
         return data
+
+    def user_info(self, **kwargs):
+        # return "ashok"
+        """return or update info about a user by
+        calling the appropriate bitlyAPI endpoint.
+        Documented at https://dev.bitly.com/api-reference#getUser
+
+        Args:
+        Returns:
+            user information, including default_group_id
+        """
+        #clicks_url = f"{self.api_url}/bitlinks/{url}/clicks"
+        user_url = f"{self.bitly.api_url}/user"
+        print(f'user_url: {user_url}')
+        headers = {"Authorization": f"Bearer {self.bitly.api_key}"}
+        response = self.bitly._get(user_url, headers=headers)
+        if not response.ok:
+            raise BadAPIResponseException(response.content)
+
+        try:
+            data = response.json()
+        except json.decoder.JSONDecodeError:
+            raise BadAPIResponseException("API response could not be decoded")
+
+        return data
+
