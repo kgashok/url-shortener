@@ -153,4 +153,3 @@ class BitShortener(Shortener):
             raise BadAPIResponseException("API response could not be decoded")
 
         return data
-
